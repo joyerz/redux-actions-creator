@@ -26,8 +26,8 @@ export const companyListRedux = buildListRedux('company_list')
 export const companyAddRedux = buildRedux('company_add')
 
 export default combineReducers({
-  list: companyListRedux.reducers,
-  add: companyAddRedux.reducers
+  list: companyListRedux.reducer,
+  add: companyAddRedux.reducer
 })
 
 ```
@@ -47,7 +47,7 @@ export default connect(
   }),
   dispatch => bindActionCreators({
     actionList: (page, limit, params) => companyListRedux.actions.start(page, limit, params), // list
-    actionAdd: (data) => companyAddRedux.actions.reset(data), // add
+    actionAdd: (data) => companyAddRedux.actions.start(data), // add
   }, dispatch),
 )(ContainerComponent)
 
@@ -61,7 +61,7 @@ export default connect(
 | params      | type   | description                     |
 | ----------- | ------ | ------------------------------- |
 | actionName  | string | Redux action name               |
-| defaultData | object | data to extend the default data |
+| defaultData | object | data to extend the initial data |
 
 
 **初始值(state)**
@@ -106,7 +106,7 @@ export default connect(
 | params      | type   | description                     |
 | ----------- | ------ | ------------------------------- |
 | actionName  | string | Redux action name               |
-| defaultData | object | data to extend the default data |
+| defaultData | object | data to extend the initial data |
 
 
 **初始值(state)**
