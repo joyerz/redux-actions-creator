@@ -1,6 +1,9 @@
 # redux-actions-creator
 redux actions创建助手，集成redux, react-actions, immutable(seamless-immutable)
 
+> 使用redux常常需要创建大量的常量字面量，手动创建actions, 以及相应的reducers进行数据处理，redux-actions-creator
+简化这类的流程，基于两个方法buildRedux和buildListRedux来减少重复性的工作. 返回对象包含actions, types, reducer
+
 
 
 ### 安装
