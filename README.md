@@ -147,3 +147,20 @@ return {
 }
 ```
 
+
+
+###状态变更
+```javascript
+{
+  loading: false,
+  success: false,
+  error: false,
+}
+
+
+actions.start() // => loading: true 
+actions.success() // => success: true
+actions.error() // => error: true, errorMessage(optional)
+actions.reset() // => reset original data  
+
+```
