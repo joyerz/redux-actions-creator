@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joyerz/redux-creator.git"
+    "url": "git+https://github.com/joyerz/redux-actions-creator.git"
   },
   "keywords": [
     "redux-actions-creator",
@@ -28,9 +28,9 @@
   "author": "joyer zhong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joyerz/redux-creator/issues"
+    "url": "https://github.com/joyerz/redux-actins-creator/issues"
   },
-  "homepage": "https://github.com/joyerz/redux-creator#readme",
+  "homepage": "https://github.com/joyerz/redux-actions-creator#readme",
   "dependencies": {
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",

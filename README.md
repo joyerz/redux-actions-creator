@@ -43,8 +43,8 @@ export default connect(
     ...
   }),
   dispatch => bindActionCreators({
-    actionList: (page, limit, params) => companyListRedux.actions.start(page, limit, params), // send code
-    actionAdd: (data) => companyAddRedux.actions.reset(data), // reset send code status
+    actionList: (page, limit, params) => companyListRedux.actions.start(page, limit, params), // list
+    actionAdd: (data) => companyAddRedux.actions.reset(data), // add
   }, dispatch),
 )(ContainerComponent)
 
