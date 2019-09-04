@@ -14,7 +14,7 @@ yarn install
 
 
 ### 使用
-
+**redux.js**
 ```javascript
 import { buildListRedux, buildRedux } from 'redux-actions-creator'
 import { combineReducers } from 'redux'
@@ -29,6 +29,28 @@ export default combineReducers({
 
 ```
 
+
+**container.js**
+```javascript
+...
+import {companyListRedux, companyAddRedux} from './redux'
+
+class ContainerComponent extends React.Component { ... }
+
+
+export default connect(
+  state => ({
+    ...
+  }),
+  dispatch => bindActionCreators({
+    actionList: (page, limit, params) => companyListRedux.actions.start(page, limit, params), // send code
+    actionAdd: (data) => companyAddRedux.actions.reset(data), // reset send code status
+  }, dispatch),
+)(ContainerComponent)
+
+```
+
+
 ### API
 
 **buildRedux(actionName, defaultData)**
@@ -38,10 +60,24 @@ export default combineReducers({
 | actionName  | string | Redux action name               |
 | defaultData | object | data to extend the default data |
 
+
+**初始值(state)**
+
+```javascript
+{
+  loading: false,
+  error: false,
+  success: false,
+  errorMessage: '',
+  params: null,
+  ...defaultData
+}
+```
+
 **返回值**
 
 ```javascript
-return {
+{
   reducer, 
   types: {  // 常量
     START,
@@ -55,19 +91,6 @@ return {
     error,     // action: errorMessage => ({errorMessage})
     reset,     // action
   },
-}
-```
-
-**初始值**
-
-```javascript
-{
-  loading: false,
-  error: false,
-  success: false,
-  errorMessage: '',
-  params: null,
-  ...defaultData
 }
 ```
 
@@ -82,27 +105,8 @@ return {
 | actionName  | string | Redux action name               |
 | defaultData | object | data to extend the default data |
 
-**返回值**
 
-```javascript
-return {
-  reducer, 
-  types: {  // 常量
-    START,
-    SUCCESS,
-    RESET,
-    ERROR,
-  },
-  actions: {  // actions
-    start,     // action: params => params
-    success,   // action: data => ({data})
-    error,     // action: errorMessage => ({errorMessage})
-    reset,     // action
-  },
-}
-```
-
-**初始值**
+**初始值(state)**
 
 ```javascript
 {
@@ -121,3 +125,25 @@ return {
   ...defaultData
 }
 ```
+
+
+**返回值**
+
+```javascript
+return {
+  reducer, 
+  types: {  // 常量
+    START,
+    SUCCESS,
+    RESET,
+    ERROR,
+  },
+  actions: {  // actions
+    start,     // action: (page, limit, params) => ({page, limit, params})
+    success,   // action: data => ({data})
+    error,     // action: errorMessage => ({errorMessage})
+    reset,     // action
+  },
+}
+```
+
