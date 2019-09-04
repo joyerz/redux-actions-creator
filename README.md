@@ -6,9 +6,9 @@ redux actions创建助手，集成redux, react-actions, immutable(seamless-immut
 ### 安装
 
 ```terminal
-yarn install
+yarn install redux-actions-creator
 # or
-# npm install
+# npm install redux-actions-creator
 ```
 
 
