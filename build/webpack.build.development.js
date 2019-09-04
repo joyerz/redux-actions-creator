@@ -1,28 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
-const TerserJSPlugin = require('terser-webpack-plugin')
-const cleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
-  mode: 'production',
-  devtool: false,
-  performance: {
-    hints: false,
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
-  optimization: {
-    minimizer: [
-      new TerserJSPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: true, // 删除console
-          },
-        },
-      }),
-    ],
-  },
-
+  mode: 'development',
+  devtool: 'inline-source-map',
   entry: path.resolve(__dirname, '../src/index.js'),
   resolve: {
     extensions: ['.js', '.json'],
@@ -32,7 +13,7 @@ module.exports = {
     library: 'redux-actions-creator',
     libraryTarget: 'commonjs2',
     libraryExport: 'default',
-    filename: 'index.js',
+    filename: 'index.development.js',
     crossOriginLoading: 'anonymous',
   },
 
@@ -48,11 +29,9 @@ module.exports = {
   },
 
   plugins: [
-    new cleanWebpackPlugin(),
-    //
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('production'),
+        NODE_ENV: JSON.stringify('development'),
       },
     }),
   ],

@@ -97,10 +97,10 @@ export const buildListRedux = (actionName, defaultData = {}) => {
       ...defaultData
     })
 
-  const START = `LOAD_${actionName}_LIST_START`
-  const SUCCESS = `LOAD_${actionName}_LIST_SUCCESS`
+  const START = `${actionName}_LIST_START`
+  const SUCCESS = `${actionName}_LIST_SUCCESS`
   const RESET = `RESET_${actionName}_LIST`
-  const ERROR = `LOAD_${actionName}_LIST_ERROR`
+  const ERROR = `${actionName}_LIST_ERROR`
 
   const start = createAction(START, (page, limit, params) => ({
     page,
