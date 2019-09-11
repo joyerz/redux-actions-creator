@@ -60,6 +60,7 @@ module.exports = {
   externals: {
     'Immutable': 'seamless-immutable',
     'redux-actions': 'redux-actions',
-    'redux': 'redux'
+    'redux': 'redux',
+    'redux-saga': 'redux-saga',
   }
 }

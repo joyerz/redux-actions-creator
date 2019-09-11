@@ -57,5 +57,6 @@ export const buildRedux: buildReduxT
 export const buildReduxConnectSaga: buildReduxConnectSagaT
 export const buildListReduxConnectSaga: buildReduxConnectSagaT
 export const initFetch: initFetchT
+export const allSagas: Array<any>
 
 export {}

@@ -1,6 +1,6 @@
 {
   "name": "redux-actions-creator",
-  "version": "1.2.0",
+  "version": "1.2.4",
   "description": "redux helper to create redux actions & reducers with Immutable(seamless-immutable)",
   "main": "index.js",
   "typings": "index.d.ts",

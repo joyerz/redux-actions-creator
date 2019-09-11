@@ -50,7 +50,7 @@ export function* createWatcher(_redux, conf) {
       let data = yield call(doFetch, fetchParams)
 
       // 数据处理器
-      conf.resultHandler && (data = conf.resultHandler(data, payload))
+      conf.resultHandler && (data = yield call(conf.resultHandler, data, payload, sagaActions))
       yield put(_redux.actions.success(data))
 
       // 异步操作成功后置方法
@@ -105,4 +105,4 @@ export function* setRequestParams(conf, payload) {
   return fetchParams
 }
 
-export const allsaga = sagas
+export const allSagas = sagas

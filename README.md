@@ -54,6 +54,7 @@ export default connect(
 ```
 
 
+
 ### API
 
 **buildRedux(actionName, defaultData)**
@@ -168,3 +169,62 @@ actions.error() // => error: true, errorMessage(optional)
 actions.reset() // => initial data
 
 ```
+
+---
+
+###Connect Sagas
+>API 额外提供的reducer create actions与sagas处理合并
+
+1. 初始化store, 合并sagas
+
+```javascript
+import { allSagas, init } from 'react-actions-creator'
+import doFetch from 'your fetch funciton file' // fetch
+
+init(doFetch) // 初始化fetch方法
+
+...
+
+export default function* rootSaga(getState) {
+    yield all(sagas.concat(allSagas))
+}
+
+```
+
+2. 使用
+
+buildListReduxConnectSaga(actionName, initData)(object)
+actionName, initData参数跟方法*buildListRedux*一致
+object是saga的监听方法, 两次调用返回值跟*buildListRedux*一致，返回types, actions, reducer, 具体参数如下:
+
+
+```javascript
+import { buildListReduxConnectSaga, buildReduxConnectSaga } from 'react-actions-creator'
+
+export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
+  url: (payload, {}) => {
+    return API.company.list(payload.page, payload.limit) + payload.params
+  },
+  method: 'GET',
+  data: function*(data, payload, {}) {
+    ...
+  },
+  resultHandler: function*() {
+    ...
+  },
+  after: function*() {
+    ...
+  }
+})
+```
+
+buildListReduxConnectSaga(actionName, initData)(object) **object**参数
+
+| name   | type                                       | description       |
+| ------ | ------------------------------------------ | ----------------- |
+| url    | string \| (payload, sagaActions) => string | 请求地址          |
+| method | String                                     | 'GET', 'POST' ... |
+| resultHandler | (data, payload, sagaActions) => data | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
+| after | (data, payload, sagaActions) => void | resultHandler执行完毕后调用 |
+| catch | (e) => any                           | e为异常error |
+
