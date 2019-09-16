@@ -37,20 +37,24 @@ interface sagaActionsT {
 
 declare type urlFunctionT = (payload: any, sagaActions: sagaActionsT) => string
 
-declare type afterFunctionT = (data: any, payload: any, sagaActions: sagaActionsT) => any
+declare type afterFunctionT = (data: any, payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => any
+declare type catchFunctionT = (e: any, payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => any
 
-declare type handleSagaFunctionT = (payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: any) => returnReudxT
+type handleSagaFunctionT = (payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => returnReudxT
 
-declare type handleSagaConfigT = {
+type handleSagaConfigT = {
   url: string | urlFunctionT,
-  method: string,
-  data: string | urlFunctionT,
-  after: afterFunctionT,
-  resultHandler: afterFunctionT,
+  method?: string,
+  data?: string | urlFunctionT,
+  after?: afterFunctionT,
+  resultHandler?: afterFunctionT,
+  catch?: catchFunctionT,
 }
+
 declare type handleSagaConfigFunctionT = (config: handleSagaConfigT) => returnReudxT
 
-declare type buildReduxConnectSagaT = (actionName: string | Number, defaultData?: object) => handleSagaFunctionT | handleSagaConfigFunctionT
+declare type buildReduxConnectSagaT = (actionName: string | Number, defaultData?: object) =>
+  (config: handleSagaConfigT | handleSagaFunctionT) => returnReudxT
 
 declare type initFetchT = (doFetch: Function) => void
 
