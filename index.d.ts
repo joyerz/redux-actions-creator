@@ -40,9 +40,9 @@ declare type urlFunctionT = (payload: any, sagaActions: sagaActionsT) => string
 declare type afterFunctionT = (data: any, payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => any
 declare type catchFunctionT = (e: any, payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => any
 
-type handleSagaFunctionT = (payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => returnReudxT
+declare type handleSagaFunctionT = (payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: object) => returnReudxT
 
-type handleSagaConfigT = {
+declare type handleSagaConfigT = {
   url: string | urlFunctionT,
   method?: string,
   data?: string | urlFunctionT,
@@ -50,8 +50,6 @@ type handleSagaConfigT = {
   resultHandler?: afterFunctionT,
   catch?: catchFunctionT,
 }
-
-declare type handleSagaConfigFunctionT = (config: handleSagaConfigT) => returnReudxT
 
 declare type buildReduxConnectSagaT = (actionName: string | Number, defaultData?: object) =>
   (config: handleSagaConfigT | handleSagaFunctionT) => returnReudxT

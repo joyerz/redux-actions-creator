@@ -230,7 +230,49 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 | after         | (data, payload, sagaActions, allReduxActions) => void | resultHandler执行完毕后调用                                  |
 | catch         | (e, payload, sagaActions, allReduxActions) => void    | e为异常error                                                 |
 
+```javascript
 
+import { buildListRedux, buildRedux, buildListReduxConnectSaga } from 'redux-actions-creator'
+import { obj2params } from 'utils/objectHelper'
+import { API } from 'conf/api'
+import { mockDataWrapper } from 'utils/mockDataHelper'
+
+...
+
+export const companyListRedux = buildListReduxConnectSaga('company_list')({
+  url: (payload) => {
+    console.log('load list', payload)
+    const { page = 1, limit = 10, params } = payload
+    const tranParams = obj2params(params)
+    return API.company.list(page, limit) + (tranParams ? '&' + tranParams : '')
+  },
+  method: 'GET',
+  
+  // fetch请求后
+  resultHandler: (data, payload, { put }, actions, allReduxActions) => {
+    const { page = 1, limit = 10, params } = payload
+    return mockDataWrapper(data, page, limit)
+  },
+  // resultHandler执行完以后
+  after: function* (data, payload, { put }, actions) {
+    const { page = 1, limit = 10, params } = payload
+    if (page === 1) {
+      yield new Promise(r => { setTimeout(() => r(), 1000)})
+    }
+  },
+  
+  // 错误异常
+  catch: async (e) => {
+    await new Promise(resolve => setTimeout(() => resolve(), 1000)) // 异步1s
+    console.log(e)
+  }
+})
+
+```
+注意，<font color=#f30>resultHandler, after, catch</font>方法, 可以接受三种函数，分别分同步， sync异步，或者generator function
+1. 当方法不需要异步操作时，直接使用同步方法
+2. 当需要异步操作时，使用 async () => any 的方法
+3. 当需要异步<font color=#f30>并且</font>还使用到put等saga的function，使用generator, function*() => yield any 
 
 ----
 
@@ -245,3 +287,23 @@ function* (payload, sagaActions, actions, allReduxActions) { ... }
 | actions         | object | 当前创建的actions: 包含start, success, reset, error          |
 | allReduxActions | object | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start()<br />其中*companyList* 为*buildRedux, buildListRedux, buildReduxConnectSaga, buildListReduxConnectSaga*方法传入的第一个<font color=#f30>actionName</font>参数的<font color=#f30>驼峰形式</font> |
 
+```javascript
+...
+
+export const companyListRedux = buildListReduxConnectSaga('companyList')(
+  function* (payload, { put, call }, actions) {
+    try {
+      let { page, limit, params } = payload
+      page = page || 1
+      limit = limit || 10
+      const tranParams = obj2params(params) // 序列化
+      const url = API.company.list(page, limit) + (tranParams ? '&' + tranParams : '')
+      const data = yield call(doFetch, { url, method: 'GET' })
+      yield put(actions.success(mockDataWrapper(data, page, limit)))
+    } catch(e) {
+      console.log(e)
+      actions.reset()
+    }
+  }
+)
+```
