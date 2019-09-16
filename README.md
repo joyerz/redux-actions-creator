@@ -226,6 +226,7 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 | ------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
 | url           | String \| (payload, sagaActions) => string            | 请求地址                                                     |
 | method        | String                                                | 'GET', 'POST' ...                                            |
+| data          | (payload, sagaActions) => data                        | 请求发送请求（常用put, post方法）以前针对body部分的data的处理       |
 | resultHandler | (data, payload, sagaActions, allReduxActions) => data | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
 | after         | (data, payload, sagaActions, allReduxActions) => void | resultHandler执行完毕后调用                                  |
 | catch         | (e, payload, sagaActions, allReduxActions) => void    | e为异常error                                                 |
