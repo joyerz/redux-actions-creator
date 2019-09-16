@@ -221,13 +221,16 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 ### buildListReduxConnectSaga(actionName, initData)(object) **object**参数
 ----
 *参数方式1 - 对象*
-| name   | type                                        | description                                                     |
-| ------ | ------------------------------------------  | --------------------------------------------------------------- |
-| url    | string \| (payload, sagaActions) => string  | 请求地址                                                         |
-| method | String                                      | 'GET', 'POST' ...                                               |
-| resultHandler | (data, payload, sagaActions) => data | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
-| after | (data, payload, sagaActions) => void         | resultHandler执行完毕后调用                                       |
-| catch | (e) => any                                   | e为异常error                                                     |
+
+| name          | type                                       | description                                                  |
+| ------------- | ------------------------------------------ | ------------------------------------------------------------ |
+| url           | String \| (payload, sagaActions) => string | 请求地址                                                     |
+| method        | String                                     | 'GET', 'POST' ...                                            |
+| resultHandler | (data, payload, sagaActions) => data       | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
+| after         | (data, payload, sagaActions) => void       | resultHandler执行完毕后调用                                  |
+| catch         | (e) => any                                 | e为异常error                                                 |
+
+
 
 ----
 
