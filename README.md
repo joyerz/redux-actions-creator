@@ -231,13 +231,12 @@ buildListReduxConnectSaga(actionName, initData)(object) **object**参数
 
 
 
-
 *参数方式2 - generator function*
 
 function* (payload, sagaActions, actions, allReduxActions) { ... }
 | name   | type                                       | description       |
 | ------ | ------------------------------------------ | ----------------- |
-| payload  | {} | action.payload          |
-| sagaActions | yield 调用 redux-saga的actions | put, select, call, delay |
-| actions |  object | start, success, reset, error |
-| allReduxActions | object  | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start() |
+| payload  | object | action.payload对象     |
+| sagaActions | object | saga的API: 包含put, select, call, delay |
+| actions |  object | 当前创建的actions: 包含start, success, reset, error |
+| allReduxActions | object  | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start()<br />其中*companyList* 为*buildRedux, buildListRedux, buildReduxConnectSaga, buildListReduxConnectSaga*方法传入的第一个<font color=#f30>actionName</font>参数的<font color=#f30>驼峰形式</font> |
