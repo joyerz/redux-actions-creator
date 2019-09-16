@@ -68,16 +68,16 @@ export function* createWatcher(_redux, conf) {
         }
 
         // 数据处理器
-        conf.resultHandler && (data = yield call(conf.resultHandler, data, payload, sagaActions))
+        conf.resultHandler && (data = yield call(conf.resultHandler, data, payload, sagaActions, allReduxActions))
         yield put(_redux.actions.success(data))
 
         // 异步操作成功后置方法
         if (conf.after) {
-          yield call(conf.after, data, payload, sagaActions)
+          yield call(conf.after, data, payload, sagaActions, allReduxActions)
         }
       } catch (e) {
         if (conf.catch) {
-          return conf.catch(e)
+          conf.catch(e, payload, sagaActions, allReduxActions)
         }
         yield put(_redux.actions.reset())
       }

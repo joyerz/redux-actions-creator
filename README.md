@@ -172,7 +172,7 @@ actions.reset() // => initial data
 
 ---
 
-###Connect Sagas
+### Connect Sagas
 >API 额外提供的reducer create actions与sagas处理合并
 
 1. 初始化store, 合并sagas
@@ -222,13 +222,13 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 ----
 *参数方式1 - 对象*
 
-| name          | type                                       | description                                                  |
-| ------------- | ------------------------------------------ | ------------------------------------------------------------ |
-| url           | String \| (payload, sagaActions) => string | 请求地址                                                     |
-| method        | String                                     | 'GET', 'POST' ...                                            |
-| resultHandler | (data, payload, sagaActions) => data       | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
-| after         | (data, payload, sagaActions) => void       | resultHandler执行完毕后调用                                  |
-| catch         | (e) => any                                 | e为异常error                                                 |
+| name          | type                                                  | description                                                  |
+| ------------- | ----------------------------------------------------- | ------------------------------------------------------------ |
+| url           | String \| (payload, sagaActions) => string            | 请求地址                                                     |
+| method        | String                                                | 'GET', 'POST' ...                                            |
+| resultHandler | (data, payload, sagaActions, allReduxActions) => data | 请求数据成功以后, 处理data后返回，自动调用该actions.success(data)方法 |
+| after         | (data, payload, sagaActions, allReduxActions) => void | resultHandler执行完毕后调用                                  |
+| catch         | (e, payload, sagaActions, allReduxActions) => void    | e为异常error                                                 |
 
 
 
@@ -237,9 +237,11 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 *参数方式2 - generator function*
 
 function* (payload, sagaActions, actions, allReduxActions) { ... }
-| name            | type    | description       |
-| --------------- | ------- | ----------------- |
-| payload         | object  | action.payload对象     |
-| sagaActions     | object  | saga的API: 包含put, select, call, delay |
-| actions         | object  | 当前创建的actions: 包含start, success, reset, error |
-| allReduxActions | object  | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start()<br />其中*companyList* 为*buildRedux, buildListRedux, buildReduxConnectSaga, buildListReduxConnectSaga*方法传入的第一个<font color=#f30>actionName</font>参数的<font color=#f30>驼峰形式</font> |
+
+| name            | type   | description                                                  |
+| --------------- | ------ | ------------------------------------------------------------ |
+| payload         | object | action.payload对象                                           |
+| sagaActions     | object | saga的API: 包含put, select, call, delay                      |
+| actions         | object | 当前创建的actions: 包含start, success, reset, error          |
+| allReduxActions | object | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start()<br />其中*companyList* 为*buildRedux, buildListRedux, buildReduxConnectSaga, buildListReduxConnectSaga*方法传入的第一个<font color=#f30>actionName</font>参数的<font color=#f30>驼峰形式</font> |
+
