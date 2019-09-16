@@ -14,7 +14,7 @@ export const buildRedux = (actionName, defaultData = {}) => {
       success: false,
       errorMessage: '',
       params: null,
-      ...defaultData
+      ...defaultData,
     })
 
   const START = `${actionName}_START`
@@ -22,7 +22,7 @@ export const buildRedux = (actionName, defaultData = {}) => {
   const ERROR = `${actionName}_ERROR`
   const RESET = `${actionName}_REST`
 
-  const start = createAction(START, params => params)
+  const start = createAction(START, (params = null) => params)
   const reset = createAction(RESET)
   const success = createAction(SUCCESS, data => ({ data }))
   const error = createAction(ERROR, errorMessage => ({ errorMessage }))
@@ -35,14 +35,14 @@ export const buildRedux = (actionName, defaultData = {}) => {
           error: false,
           success: false,
           errorMessage: '',
-          params: action.payload.params
+          params: action.payload && action.payload.params,
         }),
       [SUCCESS]: (state, action) =>
         state.merge({
           loading: false,
           error: false,
           success: true,
-          data: action.payload.data,
+          data: action.payload && action.payload.data,
           errorMessage: '',
         }),
       [ERROR]: (state, action) =>
@@ -50,7 +50,7 @@ export const buildRedux = (actionName, defaultData = {}) => {
           loading: false,
           error: true,
           success: false,
-          errorMessage: action.payload.errorMessage,
+          errorMessage: action.payload && action.payload.errorMessage,
         }),
       [RESET]: (state, action) => initialState(),
     },
@@ -78,7 +78,8 @@ export const buildRedux = (actionName, defaultData = {}) => {
  *
  * @param actionName {string}, e.g. list_vehicle
  * @param defaultData {object}
- * @return {{types: {SUCCESS: string, START: string, ERROR: string, RESET: string}, reducer: Function, actions: {success: actionCreator, start: actionCreator, reset: actionCreator, error: actionCreator}}}
+ * @return {{types: {SUCCESS: string, START: string, ERROR: string, RESET: string}, reducer: Function, actions:
+ *   {success: actionCreator, start: actionCreator, reset: actionCreator, error: actionCreator}}}
  */
 export const buildListRedux = (actionName, defaultData = {}) => {
   const initialState = () =>
@@ -94,7 +95,7 @@ export const buildListRedux = (actionName, defaultData = {}) => {
         total_page: 0,
         entries: [],
       },
-      ...defaultData
+      ...defaultData,
     })
 
   const START = `${actionName}_LIST_START`
@@ -117,17 +118,17 @@ export const buildListRedux = (actionName, defaultData = {}) => {
         state.merge({
           loading: true,
           success: false,
-          params: action.payload.params || state.params,
+          params: action.payload && action.payload.params,
         }),
       [SUCCESS]: (state, action) => {
         return state.merge({
           loading: false,
           success: true,
-          data: action.payload.data,
+          data: action.payload && action.payload.data,
         })
       },
-      [ERROR]: (state) => state.merge({ loading: false, error: true, success: false }),
-      [RESET]: (state) => initialState(),
+      [ERROR]: state => state.merge({ loading: false, error: true, success: false }),
+      [RESET]: state => initialState(),
     },
     initialState(),
   )

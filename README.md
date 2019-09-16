@@ -220,6 +220,7 @@ export const companyListRedux = buildListReduxConnectSaga('company_list', {})({
 
 buildListReduxConnectSaga(actionName, initData)(object) **object**参数
 
+*参数方式1 - 对象*
 | name   | type                                       | description       |
 | ------ | ------------------------------------------ | ----------------- |
 | url    | string \| (payload, sagaActions) => string | 请求地址          |
@@ -228,3 +229,15 @@ buildListReduxConnectSaga(actionName, initData)(object) **object**参数
 | after | (data, payload, sagaActions) => void | resultHandler执行完毕后调用 |
 | catch | (e) => any                           | e为异常error |
 
+
+
+
+*参数方式2 - generator function*
+
+function* (payload, sagaActions, actions, allReduxActions) { ... }
+| name   | type                                       | description       |
+| ------ | ------------------------------------------ | ----------------- |
+| payload  | {} | action.payload          |
+| sagaActions | yield 调用 redux-saga的actions | put, select, call, delay |
+| actions |  object | start, success, reset, error |
+| allReduxActions | object  | 全局其他地方创建的redux action, 比如 allReduxActions['companyList'].start() |

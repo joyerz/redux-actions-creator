@@ -1,5 +1,5 @@
-import { buildRedux, buildListRedux } from './helper'
-import withSaga, { init, allSagas } from './withSaga'
+import { buildRedux as build, buildListRedux as buildList } from './helper'
+import withSaga, { init, allSagas as sagas } from './withSaga'
 
 export default {
   buildRedux,
@@ -10,3 +10,9 @@ export default {
   allSagas,
 }
 
+export const initFetch = init
+export const allSagas = sagas
+export const buildRedux = build
+export const buildListRedux = buildList
+export const buildReduxConnectSaga = withSaga(buildRedux)
+export const buildListReduxConnectSaga = withSaga(buildListRedux)

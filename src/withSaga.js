@@ -1,36 +1,39 @@
-import { put, call, takeLatest, select, delay, } from 'redux-saga/effects'
-import { obj2params } from './common'
+import { put, call, takeLatest, select, delay } from 'redux-saga/effects'
+import { obj2params, underScoreToCamel } from './common'
 
 let doFetch = null
-export const init = (fetch) => (doFetch = fetch)
+let doFetchAll = null
+export const init = (fetch, fetchAll = null) => {
+  doFetch = fetch
+  if (fetchAll) {
+    doFetchAll = fetchAll
+  }
+}
 
 const sagaActions = {
   put,
   call,
   select,
-  delay
+  delay,
 }
 
 // 所有saga
 let sagas = []
+let allReduxActions = {}
 
 /**
  * 创建reduce时自动关联saga
  */
-export default (reduxer) => (...args) => {
-
+export default reduxer => (...args) => {
   let _redux = reduxer.call(null, ...args)
-
-  return (conf) => {
-
+  const name = underScoreToCamel(args[0])
+  allReduxActions[name] = _redux.actions
+  return conf => {
     const watch = createWatcher(_redux, conf)
-
     sagas.push(watch)
-
     return _redux
   }
 }
-
 
 /**
  * 根据配置创建saga
@@ -43,27 +46,43 @@ export default (reduxer) => (...args) => {
  * @param {function}        conf.catch         自定义异常
  */
 export function* createWatcher(_redux, conf) {
-  yield takeLatest(_redux.types.START, function* ({ payload }) {
-    try {
-      // 处理请求参数
-      let fetchParams = yield call(setRequestParams, conf, payload)
-      let data = yield call(doFetch, fetchParams)
-
-      // 数据处理器
-      conf.resultHandler && (data = yield call(conf.resultHandler, data, payload, sagaActions))
-      yield put(_redux.actions.success(data))
-
-      // 异步操作成功后置方法
-      if (conf.after) {
-        yield call(conf.after, data, payload, sagaActions)
+  if (typeof conf === 'function') {
+    yield takeLatest(_redux.types.START, function* ({ payload }) {
+      try {
+        yield call(conf, payload, sagaActions, _redux.actions, allReduxActions)
+      } catch(e) {
+        console.log(e)
       }
-    } catch (e) {
-      if (conf.catch) {
-        return conf.catch(e)
+    })
+  } else {
+    yield takeLatest(_redux.types.START, function* ({ payload }) {
+      try {
+        // 处理请求参数
+        let fetchParams = yield call(setRequestParams, conf, payload)
+        let data
+        if (!conf.fetchAllConfig) {
+          data = yield call(doFetch, fetchParams)
+        } else {
+          const { api, pageKey, totalPagesKey } = conf.fetchAllConfig
+          data = yield call(doFetchAll, api, pageKey, totalPagesKey)
+        }
+
+        // 数据处理器
+        conf.resultHandler && (data = yield call(conf.resultHandler, data, payload, sagaActions))
+        yield put(_redux.actions.success(data))
+
+        // 异步操作成功后置方法
+        if (conf.after) {
+          yield call(conf.after, data, payload, sagaActions)
+        }
+      } catch (e) {
+        if (conf.catch) {
+          return conf.catch(e)
+        }
+        yield put(_redux.actions.reset())
       }
-      yield put(_redux.actions.reset())
-    }
-  })
+    })
+  }
 }
 
 /**
@@ -72,18 +91,26 @@ export function* createWatcher(_redux, conf) {
  * @param {*} payload action.payload
  */
 export function* setRequestParams(conf, payload) {
-  let { method, } = conf
+  let { method } = conf
   method = method ? method.toUpperCase() : 'GET'
   let url = conf.url
   if (typeof url === 'function') {
     url = url(payload, sagaActions)
   }
-  if (!url) return
+  if (!url) {
+    return
+  }
 
   // 请求数据处理(合并 payload.params 和 传入的自定义的 data，如重复自定义属性优先)
   let sendData = {}
-  payload.params && (sendData = payload.params)  // list
-  payload.data && (sendData = payload.data)      // form
+  // list
+  if (payload && payload.params) {
+    sendData = payload.params
+  }
+  // form
+  if (payload && payload.data) {
+    sendData = payload.data
+  }
   let confDataType = Object.prototype.toString.call(conf.data)
   if (conf.data && confDataType === '[object Function]') {
     let res = yield call(conf.data, payload, sagaActions)
@@ -94,7 +121,7 @@ export function* setRequestParams(conf, payload) {
   if (confDataType === '[object Object]') {
     sendData = { ...sendData, ...conf.data }
   }
-  let fetchParams = { url, method, }
+  let fetchParams = { url, method }
   if (method === 'GET') {
     const tranParams = obj2params(sendData) // 序列化
     url += tranParams ? '&' + tranParams : ''

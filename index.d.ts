@@ -19,17 +19,14 @@ interface ActionRedux {
   reset: () => void
 }
 
-declare type buildListReduxT = (actionName: string, defaultData?: object) => {
+declare type returnReudxT = {
   actions: ActionListRedux,
   types: Types,
-  reducers: any
+  reducer: any
 }
 
-declare type buildReduxT = (actionName: string, defaultData?: object) => {
-  actions: ActionRedux,
-  types: Types,
-  reducers: any
-}
+declare type buildListReduxT = (actionName: string, defaultData?: object) => returnReudxT
+declare type buildReduxT = (actionName: string, defaultData?: object) => returnReudxT
 
 interface sagaActionsT {
   put: Function,
@@ -42,21 +39,24 @@ declare type urlFunctionT = (payload: any, sagaActions: sagaActionsT) => string
 
 declare type afterFunctionT = (data: any, payload: any, sagaActions: sagaActionsT) => any
 
-declare type buildReduxConnectSagaT = (actionName: string, defaultData?: object) => (() => {
+declare type handleSagaFunctionT = (payload: any, sagaActions: sagaActionsT, actions: ActionListRedux, allReduxActions: any) => returnReudxT
+
+declare type handleSagaConfigT = {
   url: string | urlFunctionT,
   method: string,
   data: string | urlFunctionT,
   after: afterFunctionT,
   resultHandler: afterFunctionT,
-})
+}
+declare type handleSagaConfigFunctionT = (config: handleSagaConfigT) => returnReudxT
+
+declare type buildReduxConnectSagaT = (actionName: string | Number, defaultData?: object) => handleSagaFunctionT | handleSagaConfigFunctionT
 
 declare type initFetchT = (doFetch: Function) => void
 
-export const buildListRedux: buildListReduxT
 export const buildRedux: buildReduxT
+export const buildListRedux: buildListReduxT
 export const buildReduxConnectSaga: buildReduxConnectSagaT
 export const buildListReduxConnectSaga: buildReduxConnectSagaT
 export const initFetch: initFetchT
 export const allSagas: Array<any>
-
-export {}

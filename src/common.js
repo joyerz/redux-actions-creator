@@ -1,3 +1,4 @@
+export default {}
 
 /**
  * 将对象转变为 params string
@@ -20,3 +21,23 @@ export function obj2params(obj, prefix = '', suffix = '') {
   })
   return prefix + params.join('&') + suffix
 }
+
+/**
+ *  下划线转驼峰
+ * @param name
+ */
+export const underScoreToCamel = (name) =>
+  name
+    .split('_')
+    .map((item, index) => {
+      if (item.length > 0) {
+        if (index === 0) {
+          return item.toLowerCase()
+        } else {
+          return item[0].toUpperCase() + item.substring(1).toLowerCase()
+        }
+      } else {
+        return ''
+      }
+    })
+    .join('')
